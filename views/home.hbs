@@ -1,0 +1,67 @@
+
+<div class="container">
+	<div class="row">
+		<div class="ui">
+			<div class="left-menu">
+				<form action="#" class="search">
+					<input placeholder="search..." type="search" name="" id="">
+					<input type="submit" value="&#xf002;">
+				</form>
+
+				<menu class="list-friends">
+					<li id="everyone">
+					        <i class="fa fa-users fa-fw user-icon"></i>
+					        <div class="info">
+					            <div class="user">Grup Chat</div>
+					            <div class="message-alert label label-warning">New message</div>
+					        </div>
+					</li>
+				</menu>
+			</div>
+			<div class="chat">
+				<div class="top">
+					<div class="receiver">
+						<div class="avatar">
+							<i class="fa fa-users"></i>
+						</div>
+						<div class="info">
+							<div class="name">Grup Chat (all users)</div>
+							<div class="count"><span>0</span> messages</div>
+						</div>
+					</div>
+
+					<div class="usermenu">
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"  aria-expanded="false">
+								<i class="fa fa-user fa-fw"></i>
+								{{ username }}
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="javascript:void(0)" class="clear">Clear Messages</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="#" class="logout">Logout</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="chat-body">
+					<ul class="messages" id="messages">
+
+					</ul>
+				</div>
+
+				<div class="write-form">
+					<form>
+						<input id="input-message" type="text" placeholder="Type your message here..." autocomplete="off" autofocus="true"/>
+						<i class="fa fa-picture-o"></i>
+						<i class="fa fa-file-o"></i>
+						<button class="btn send" id="send" type="submit">Send</button>
+					</form>
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

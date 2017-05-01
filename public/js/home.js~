@@ -1,0 +1,40 @@
+$('document').ready(function() {
+	
+	//Connecting Socket
+	var socket = io.connect();
+	
+	$('#btn-chat').click(function() {
+		var msg = $('#btn-input').val();
+		socket.emit('send-message', {
+			message : msg
+		});
+		$('#btn-input').val('');
+	});
+	
+	$('#btn-input').keypress(function(e) {
+		if(e.which == 13 || e.keyCode == 13) {
+			var msg = $('#btn-input').val();
+			socket.emit('send-message', {
+				message : msg
+			});
+			$('#btn-input').val('');
+		}else {
+			socket.emit('isTyping', {
+				nickname : 'hotam'
+			});
+		}
+	});
+	
+	//Event For Sending A Message 
+	socket.on('send-message', function(data) {
+		$('ul.chat').append('<li>' + data.message + '</li>');
+		
+	});
+	
+	//Event For User Is Typing 
+	socket.on('typing', function(data) {
+		//alert(data.nickname + ' is typing');
+		$('ul.chat').html('<li>' + data.nickname + 'is typing</li>');
+	});
+	
+});
