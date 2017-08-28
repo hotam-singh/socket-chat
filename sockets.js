@@ -2,34 +2,27 @@ var connect = require('connect');
 //var parseCookie = require('connect').utils.parseCookie;
 var cookie = require('cookie');
 var config = require('./config/config.json');
+var Message = require('./models/messages');
 var users = [];
 var msgCount = 0;
+var count = 0;
 
 module.exports = Sockets;
 
 function Sockets (app, io) {
-	setAuthorization = function (socket, next) {
-		var hsData = socket.request;
-		console.log("Socket's setAuthorization called from "+hsData.connection.remoteAddress);
-	        if(hsData.headers.cookie) {
-	            //console.log('cookies : '+hsData.headers.cookie);
-		    var cookies = cookie.parse(hsData.headers.cookie);
-		    var sid = cookies['connect.sid'];
-		    console.log('sid : '+sid);
-	        } else {
-	            next(new Error('No cookie transmitted.'));
-	        }
-	};
 	onConnectionHandler = function(socket) {
-		//var cookie = socket.request.headers.cookie;
-		//var parseCookie = connect.utils.parseCookie(cookie);
-		//var sid = parseCookie['connect.sid'];
-		//if(!sid)
-		//return;
-		//var cookie = socket.handshake.headers.cookie;
-		//var cookie = cookie.parse(socket.handshake.headers.cookie);
-		//console.log('cookie : '+cookie);
 		console.log('socketID : ' + socket.id + ' connected');
+
+		//Socket Event To Set Username In Online User's List
+		socket.on('setUsername', function(data) {
+			console.log('Executing Set Username Event');
+			var user = {
+				username: data.username,
+				status: 'online',
+				socketId: socket.id
+		        };
+			acceptUser(socket, user);
+		});
 
 		//Socket Event For User Is Typing
 		socket.on('isTyping', function(data) {
@@ -37,14 +30,14 @@ function Sockets (app, io) {
 			io.sockets.emit('typing', data);
 		});
 
-		//Event For Sending A Message
+		//Socket Event For Sending A Message
 		socket.on('send-message', function(data) {
 			msgCount = msgCount + 1;
+			count = 0;
 			console.log('data : ' + JSON.stringify(data));
 			io.sockets.emit('msgCount', msgCount);
 			io.sockets.emit('send-message', {
 				msg: data.message,
-				position: 'right',
 				time: data.time,
 				username: data.username
 			});
@@ -53,8 +46,43 @@ function Sockets (app, io) {
 		//On Socket Disconection
 		socket.on('disconnect', function() {
 			console.log('socketID : ' + socket.id + ' is disconnected');
+			getUser(socket.id, function(offlineUser) {
+				console.log(offlineUser + ' is offline');
+				io.emit('users', users);
+			});
 		});
 	};
-	//io.use(setAuthorization);
+
+	//Function To Verify Whether A User Already Exists In Online User's List
+	function acceptUser(socket, user) {
+		console.log('Updating online users list');
+		var userFound = false;
+		if (users) {
+			for (var i = 0; i < users.length; i++) {
+				if (users[i]['username'] == user.username) {
+					users[i]['status'] = 'online';
+					userFound = true;
+				}
+			}
+		}
+		if (!userFound) {
+			users.push(user);
+			console.log(user.username + ' joined chat..');
+		}
+		io.emit('users', users);
+	}
+
+	//Function To Get Offline User
+	function getUser(socketId, callback) {
+		if(users) {
+			users.forEach(function(user) {
+				if(user.socketId == socketId) {
+					var offlineUser = user.username;
+					users.pop(user);
+					callback(offlineUser);
+				}
+			});
+		}
+	};
 	io.on('connection', onConnectionHandler);
 }

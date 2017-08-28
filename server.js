@@ -8,7 +8,10 @@ var hbs = require('express-handlebars');
 var io = require('socket.io');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var config = require('./config/config.json')
+var redisStore = require('connect-redis')(session);
+var redis   = require('redis');
+var client  = redis.createClient();
+var config = require('./config/config.json');
 
 //Call The express() function And Puts New Application Into app Variable
 var app = exports.app = express();
@@ -19,7 +22,7 @@ app.engine('hbs', hbs({extname : 'hbs', defaultLayout: 'layout', layoutsDir: __d
 app.set('view engine', 'hbs');
 
 //To Use Static Files On The Server
-app.use(express.static(__dirname + '/'));
+app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
 //app.use(expressValidator());
 app.use(expressValidator({
@@ -41,17 +44,20 @@ app.use(expressValidator({
 app.use(cookieParser());
 app.use(session({
 	secret: "fd34s@!@dfa453f3DF#$D&W",
-	resave: true,
-	saveUninitialized: true,
-	cookie: { secure: false }
+	store: new redisStore({
+		host: 'localhost',
+		port: 6379,
+		client: client
+	}),
+	resave: false,
+	saveUninitialized: false
 }));
 
 //Listening The App on Specific Port
 var server = app.listen(3333, function() {
 	console.log('Listening your request on localhost:3333');
 });
-
+var routes = require('./routes')(app, io);
 //Calling routes.js
 var io = require('socket.io').listen(server);
 require('./sockets.js')(app, io);
-require('./routes')(app, io);

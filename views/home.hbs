@@ -48,12 +48,23 @@
 				</div>
 				<div class="chat-body">
 					<ul class="messages" id="messages">
-
+						{{#if msgHistory}}
+							{{#each msgHistory }}
+								<li class="{{position}}">
+									<div class="head">
+										<span class="time">{{time}}</span>
+										<span class="name">{{username}}</span>
+									</div>
+									<div class="message">{{msg}}</div>
+								</li>
+							{{/each}}
+						{{/if}}
 					</ul>
 				</div>
 
 				<div class="write-form">
 					<form>
+						<div id="isTyping"></div>
 						<input id="input-message" type="text" placeholder="Type your message here..." autocomplete="off" autofocus="true"/>
 						<i class="fa fa-picture-o"></i>
 						<i class="fa fa-file-o"></i>
