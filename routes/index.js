@@ -2,19 +2,19 @@ var register = require('../public/js/register');
 var login = require('../public/js/login');
 var Messages = require('../models/messages');
 Messages.remove();
-var session = '';
+var session;
 
 module.exports = Routes;
 
 function Routes(app, io) {
 	app.get('/', function(req, res) {
-		session = req.session;
-		console.log('cookies : '+JSON.stringify(req.cookies));
-		if(session.username) {
-			console.log('user already login');
-		}else {
+		//session = req.session;
+		// console.log('cookies : '+JSON.stringify(req.cookies));
+		// if(session.username) {
+		// 	console.log('user already login');
+		// }else {
 			res.render('index');
-		}
+		//}
 	});
 
 	app.get('/login', function(req, res) {

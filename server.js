@@ -8,9 +8,9 @@ var hbs = require('express-handlebars');
 var io = require('socket.io');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var redisStore = require('connect-redis')(session);
-var redis   = require('redis');
-var client  = redis.createClient();
+// var redisStore = require('connect-redis')(session);
+// var redis   = require('redis');
+// var client  = redis.createClient();
 var config = require('./config/config.json');
 
 //Call The express() function And Puts New Application Into app Variable
@@ -44,11 +44,11 @@ app.use(expressValidator({
 app.use(cookieParser());
 app.use(session({
 	secret: "fd34s@!@dfa453f3DF#$D&W",
-	store: new redisStore({
-		host: 'localhost',
-		port: 6379,
-		client: client
-	}),
+	// store: new redisStore({
+	// 	host: 'localhost',
+	// 	port: 6379,
+	// 	client: client
+	// }),
 	resave: false,
 	saveUninitialized: false
 }));

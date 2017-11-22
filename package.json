@@ -3,15 +3,20 @@
   "version": "1.0.0",
   "description": "My Socket-chat Application",
   "main": "server.js",
+  "engines": {
+    "node": "8.4.0"
+  },
   "dependencies": {
     "body-parser": "^1.17.1",
+    "connect": "^3.6.5",
+    "connect-redis": "^3.3.2",
     "cookie-parser": "^1.4.3",
     "csprng": "^0.1.2",
     "express": "^4.15.2",
     "express-handlebars": "^3.0.0",
-    "express-session": "^1.15.1",
-    "express-validator": "^3.1.2",
-    "mongoose": "^4.9.1",
+    "express-session": "^1.15.6",
+    "express-validator": "^3.2.1",
+    "mongoose": "^4.13.4",
     "path": "^0.12.7",
     "socket.io": "^1.7.3"
   },

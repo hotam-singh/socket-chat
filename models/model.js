@@ -12,5 +12,5 @@ var userSchema = mongoose.Schema({
 	
 });
 
-mongoose.connect('mongodb://localhost:27017/socketChat');
+mongoose.connect('mongodb://localhost:27017/socketChat', {useMongoClient: true});
 module.exports = mongoose.model('user', userSchema);
