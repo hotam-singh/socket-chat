@@ -54,7 +54,7 @@ app.use(session({
 }));
 
 //Listening The App on Specific Port
-var server = app.listen(8080, function() {
+var server = app.listen(process.env.PORT || 3333, function() {
 	console.log('Listening your request on localhost:3333');
 });
 var routes = require('./routes')(app, io);
