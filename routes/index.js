@@ -8,18 +8,18 @@ module.exports = Routes;
 
 function Routes(app, io) {
 	app.get('/', function(req, res) {
-		//session = req.session;
-		// console.log('cookies : '+JSON.stringify(req.cookies));
-		// if(session.username) {
-		// 	console.log('user already login');
-		// }else {
+		session = req.session;
+		 console.log('cookies : '+JSON.stringify(req.cookies));
+		if(session.user) {
+		 	console.log('user already login');
+		}else {
 			res.render('index');
-		//}
+		}
 	});
 
 	app.get('/login', function(req, res) {
 		session = req.session;
-		if(session.username) {
+		if(session.user) {
 			console.log('user already login');
 		}else {
 			res.render('index');
@@ -28,7 +28,7 @@ function Routes(app, io) {
 
 	app.get('/register', function(req, res) {
 		session = req.session;
-		if(session.username) {
+		if(session.user) {
 			console.log('user already login');
 		}else {
 			res.render('register');
@@ -55,7 +55,7 @@ function Routes(app, io) {
 				console.log('STATUS : ' + JSON.stringify(status));
 				if(status.response == 'Login Sucess') {
 					req.session.user = req.body.username;
-					req.headers.cookie = req.body.username
+					req.headers.cookie.user = req.body.username;
 					//console.log('./chatroom for post request : '+req.session.user);
 					Messages.find({}, function(err, result) {
 						if(err) throw err;
