@@ -4,7 +4,8 @@
   "description": "My Socket-chat Application",
   "main": "server.js",
   "engines": {
-    "node": "8.4.0"
+    "node": "8.4.0",
+    "npm": "5.6.0"
   },
   "dependencies": {
     "body-parser": "^1.17.1",
