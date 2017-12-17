@@ -7,9 +7,6 @@ var rand = require('csprng');
 module.exports = login = {};
 
 login.loginUser = function(username, password, callback) {
-	//status = 'success';
-	console.log('LOGIN : USERNAME : ' + username);
-	console.log('LOGIN : PASSWORD : ' + password);
 	user.find({username: username},function(err,users){
 		if(users.length != 0){
 			var temp = users[0].salt;

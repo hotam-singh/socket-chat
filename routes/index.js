@@ -9,9 +9,8 @@ module.exports = Routes;
 function Routes(app, io) {
 	app.get('/', function(req, res) {
 		session = req.session;
-		 console.log('cookies : '+JSON.stringify(req.cookies));
 		if(session.user) {
-		 	console.log('user already login');
+		 	return;
 		}else {
 			res.render('index');
 		}
@@ -20,7 +19,7 @@ function Routes(app, io) {
 	app.get('/login', function(req, res) {
 		session = req.session;
 		if(session.user) {
-			console.log('user already login');
+			return;
 		}else {
 			res.render('index');
 		}
@@ -29,34 +28,27 @@ function Routes(app, io) {
 	app.get('/register', function(req, res) {
 		session = req.session;
 		if(session.user) {
-			console.log('user already login');
+			return;
 		}else {
 			res.render('register');
 		}
 	});
 
 	app.post('/chatroom', function(req, res) {
-		console.log('EXECUTING POST METHOD ON LOGGING-IN A USER');
-		console.log('user data : '+JSON.stringify(req.body));
 		username = req.body.username;
 		password = req.body.password;
 		req.checkBody('username', 'Error : Username Field Is Required').notEmpty();
 		req.checkBody('password', 'Error : Password Field Is Required').notEmpty();
 		var errors = req.validationErrors();
 		if(errors) {
-			console.log('errors : ' + JSON.stringify(errors));
 			res.render('index', {
 				errors : errors
 			});
 		}else {
-			console.log('NO ERRORS FOUND. YOU CAN NOW FURTHER PROCESS');
 			login.loginUser(username, password, function(status) {
-				//console.log('STATUS : ' + status);
-				console.log('STATUS : ' + JSON.stringify(status));
 				if(status.response == 'Login Sucess') {
 					req.session.user = req.body.username;
 					req.headers.cookie.user = req.body.username;
-					//console.log('./chatroom for post request : '+req.session.user);
 					Messages.find({}, function(err, result) {
 						if(err) throw err;
 						if(result.length >= 0) {
@@ -79,7 +71,6 @@ function Routes(app, io) {
 		if(req.session && req.session.user) {
 			Messages.find({}, function(err, result) {
 				if(err) throw err;
-				console.log('updating message UI : '+JSON.stringify(result));
 				res.render('home', {
 					username : req.session.user,
 					msgHistory: result
@@ -91,8 +82,6 @@ function Routes(app, io) {
 	});
 
 	app.post('/register', function(req, res) {
-		console.log('EXECUTING POST METHOD ON REGISTERING A USER');
-		console.log('user data : '+JSON.stringify(req.body));
 		username = req.body.username;
 		email = req.body.email;
 		password = req.body.password;
@@ -103,7 +92,6 @@ function Routes(app, io) {
 		req.checkBody('password', 'Error : Password Field Is Required').notEmpty();
 		var errors = req.validationErrors();
 		if(errors) {
-			console.log('errors : ' + JSON.stringify(errors));
 			res.render('index', {
 				errors : errors
 			});
@@ -114,9 +102,7 @@ function Routes(app, io) {
 					errors : passwordError
 				});
 			}else {
-				console.log('NO ERRORS FOUND. YOU CAN NOW FURTHER PROCESS');
 				register.newUser(username, email, password, function(status) {
-					console.log('STATUS : ' + JSON.stringify(status));
 					if(status.response == 'Sucessfully Registered') {
 						res.render('index', {
 							successMsg : status.response

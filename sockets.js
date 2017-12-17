@@ -11,11 +11,8 @@ module.exports = Sockets;
 
 function Sockets (app, io) {
 	onConnectionHandler = function(socket) {
-		console.log('socketID : ' + socket.id + ' connected');
-
 		//Socket Event To Set Username In Online User's List
 		socket.on('setUsername', function(data) {
-			console.log('Executing Set Username Event');
 			var user = {
 				username: data.username,
 				status: 'online',
@@ -26,7 +23,6 @@ function Sockets (app, io) {
 
 		//Socket Event For User Is Typing
 		socket.on('isTyping', function(data) {
-			console.log(data.nickname + ' is typing');
 			io.sockets.emit('typing', data);
 		});
 
@@ -34,7 +30,6 @@ function Sockets (app, io) {
 		socket.on('send-message', function(data) {
 			msgCount = msgCount + 1;
 			count = 0;
-			console.log('data : ' + JSON.stringify(data));
 			io.sockets.emit('msgCount', msgCount);
 			io.sockets.emit('send-message', {
 				msg: data.message,
@@ -45,9 +40,7 @@ function Sockets (app, io) {
 
 		//On Socket Disconection
 		socket.on('disconnect', function() {
-			console.log('socketID : ' + socket.id + ' is disconnected');
 			getUser(socket.id, function(offlineUser) {
-				console.log(offlineUser + ' is offline');
 				io.emit('users', users);
 			});
 		});
@@ -55,7 +48,6 @@ function Sockets (app, io) {
 
 	//Function To Verify Whether A User Already Exists In Online User's List
 	function acceptUser(socket, user) {
-		console.log('Updating online users list');
 		var userFound = false;
 		if (users) {
 			for (var i = 0; i < users.length; i++) {
@@ -67,7 +59,6 @@ function Sockets (app, io) {
 		}
 		if (!userFound) {
 			users.push(user);
-			console.log(user.username + ' joined chat..');
 		}
 		io.emit('users', users);
 	}

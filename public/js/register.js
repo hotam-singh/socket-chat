@@ -24,7 +24,7 @@ register.newUser = function(username, email, password, callback) {
 			});
 			user.find({email : email}, function(err, users){
 				if(err) {
-					console.log(err);
+					return err;
 				}else {
 					var len = users.length;
 					if(len == 0){
